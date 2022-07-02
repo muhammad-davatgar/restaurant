@@ -9,3 +9,47 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Staff {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  name     String?
+  role     Role
+  picture  String
+  password String
+}
+
+model Order {
+  id          Int      @id @default(autoincrement())
+  customer    Customer @relation(fields: [customer_id], references: [id])
+  customer_id Int // relation scalar field  (used in the `@relation` attribute above)
+  food        Food     @relation(fields: [food_name], references: [name])
+  food_name   String // relation scalar field  (used in the `@relation` attribute above)
+  type        Service
+  address     String?
+}
+
+enum Service {
+  IN_PLACE
+  DELIVERY
+}
+
+model Food {
+  name        String  @id
+  description String
+  orders      Order[]
+}
+
+model Customer {
+  id     Int     @id @default(autoincrement())
+  email  String  @unique
+  name   String
+  orders Order[]
+
+}
+
+enum Role {
+  ADMIN
+  CHEF
+  GARSON
+}
