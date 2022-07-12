@@ -1,9 +1,11 @@
-import { ForbiddenException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ForbiddenException, Injectable, InternalServerErrorException, BadRequestException, UseGuards } from '@nestjs/common';
 import { DbService } from 'src/db/db.service';
 import { Staff } from './dto';
 import { hash } from "argon2";
 import { Role } from "@prisma/client";
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { AuthService } from 'src/auth/auth.service';
+import { AuthGuard } from '@nestjs/passport';
 
 
 function role_detector(role: string): Role {
@@ -14,18 +16,17 @@ function role_detector(role: string): Role {
             return Role.CHEF;
         case "GARSON":
             return Role.GARSON;
-        default:  //TODO : return an error in this case 
-            break;
+        default:
+            throw new BadRequestException();
     }
 }
 
 // TODO : check for creation permission
 @Injectable()
 export class StaffService {
-    constructor(private db: DbService) {
+    constructor(private db: DbService, private auth: AuthService) {
 
     }
-
     async create_staff(body: Staff) {
         const pass_hash = await hash(body.password);//TODO : use a better strategy
         console.log("staff : ", body);
@@ -43,12 +44,8 @@ export class StaffService {
             return user;
 
         } catch (err) {
-            if (err instanceof PrismaClientKnownRequestError) {
-                if (err.code == "P2002")
-                    throw new ForbiddenException("Credentials taken");
-                else
-                    throw new InternalServerErrorException();
-
+            if (err instanceof PrismaClientKnownRequestError && err.code == "P2002") {
+                throw new ForbiddenException("Credentials taken");
             } else {
                 throw new InternalServerErrorException();
             }

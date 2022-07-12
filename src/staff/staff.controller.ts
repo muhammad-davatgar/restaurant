@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { AuthGuard } from "@nestjs/passport";
 import { Staff } from './dto';
 import { StaffService } from './staff.service';
 
@@ -7,6 +8,7 @@ export class StaffController {
     constructor(private service: StaffService) {
 
     }
+    @UseGuards(AuthGuard('jwt'))
     @Post("create")
     create(@Body() body: Staff) {
         console.log("body : ", body);

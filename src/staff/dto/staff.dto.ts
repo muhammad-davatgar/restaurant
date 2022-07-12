@@ -21,3 +21,12 @@ export class Staff {
     picture: string
 }
 
+export class SignIn {
+    @IsEmail()
+    @IsNotEmpty()
+    email: string;
+    @Length(10, 20)
+    password: string;
+
+}
+
