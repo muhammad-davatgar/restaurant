@@ -4,8 +4,8 @@ import { Staff } from './dto';
 import { hash } from "argon2";
 import { Role } from "@prisma/client";
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
-import { AuthService } from 'src/auth/auth.service';
 import { AuthGuard } from '@nestjs/passport';
+import { JwtService } from '@nestjs/jwt';
 
 
 function role_detector(role: string): Role {
@@ -24,8 +24,12 @@ function role_detector(role: string): Role {
 // TODO : check for creation permission
 @Injectable()
 export class StaffService {
-    constructor(private db: DbService, private auth: AuthService) {
+    constructor(private db: DbService, private jwt: JwtService) {
 
+    }
+
+    async create_token(payload: any) {
+        return await this.jwt.signAsync(payload);
     }
     async create_staff(body: Staff) {
         const pass_hash = await hash(body.password);//TODO : use a better strategy

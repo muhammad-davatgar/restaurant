@@ -8,7 +8,7 @@ export class StaffController {
     constructor(private service: StaffService) {
 
     }
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard('staff'))
     @Post("create")
     create(@Body() body: Staff) {
         console.log("body : ", body);

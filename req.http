@@ -2,8 +2,8 @@ POST http://localhost:3000/staff/create HTTP/1.1
 Content-Type: application/json
 
 {
-    "name":"mmd",
-    "email": "md@gmail.com",
+    "name":"mmd4",
+    "email": "md4@gmail.com",
     "password" : "gina eshah",
     "role" : "ADMIN",
     "picture" : "/someaddress",
