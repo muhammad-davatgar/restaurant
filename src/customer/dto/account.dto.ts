@@ -1,13 +1,7 @@
-import { IsEmail, IsEnum, IsNotEmpty, Length } from "class-validator";
+import { IsEmail, isNotEmpty, IsNotEmpty, Length, } from "class-validator";
 
 
-enum Role {
-    ADMIN,
-    CHEF,
-    GARSON
-}
-
-export class Staff {
+export class SignUp {
     @IsEmail()
     @IsNotEmpty()
     email: string;
@@ -15,9 +9,8 @@ export class Staff {
     password: string;
     @IsNotEmpty()
     name: string;
-    @IsEnum(Role)
-    role: string;
 }
+
 
 export class SignIn {
     @IsEmail()
@@ -25,6 +18,4 @@ export class SignIn {
     email: string;
     @Length(10, 20)
     password: string;
-
 }
-

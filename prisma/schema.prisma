@@ -41,10 +41,12 @@ model Food {
 }
 
 model Customer {
-  id     Int     @id @default(autoincrement())
-  email  String  @unique
-  name   String
-  orders Order[]
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  name     String
+  password String
+  picture  String
+  orders   Order[]
 
 }
 

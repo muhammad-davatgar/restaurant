@@ -5,7 +5,7 @@ import { StaffJwt } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-    imports: [JwtModule.register({ secret: process.env.STAFF_JWT, signOptions: { expiresIn: 60 * 60 * 60 * 12 } })],
+    imports: [JwtModule.register({ secret: process.env.STAFF_JWT, signOptions: { expiresIn: 60 * 60 * 12 } })],
     providers: [StaffService, StaffJwt],
     controllers: [StaffController],
     exports: [StaffJwt]
