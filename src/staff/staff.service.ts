@@ -6,6 +6,7 @@ import { Role } from "@prisma/client";
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
+import { AuthGuard } from '@nestjs/passport';
 
 
 function role_detector(role: string): Role {
@@ -30,20 +31,22 @@ export class StaffService {
     async create_token(payload: any) {
         return await this.jwt.signAsync(payload);
     }
+    @UseGuards(AuthGuard("staff"))
     async create_staff(body: Staff) {
+        const role = role_detector(body.role);
         const pass_hash = await hash(body.password);//TODO : use a better strategy
         try {
             let user = await this.db.staff.create({
                 data: {
                     name: body.name,
                     email: body.email,
-                    role: Role.ADMIN,
+                    role,
                     picture: "",
                     password: pass_hash
 
                 }
             });
-            const { password, ...res } = user
+            const { password, ...res } = user;
             return res;
 
         } catch (err) {
@@ -61,7 +64,7 @@ export class StaffService {
         try {
             const user = await this.db.staff.findUnique({ where: { email } });
             if (await verify(user.password, password)) {
-                const token = await this.create_token({ body, role: user.role });
+                const token = await this.create_token({ email, role: user.role });
                 res.cookie("Authorization", token, {
                     maxAge: 60 * 60 * 12 * 1000,
                     sameSite: 'strict',

@@ -1,4 +1,6 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { Response } from 'express';
 import { CustomerService } from './customer.service';
 import { SignIn, SignUp } from './dto';
 
@@ -10,7 +12,13 @@ export class CustomerController {
         return this.customer_service.signup(body);
     }
     @Post("signin")
-    signin(@Body() body: SignIn) {
-        return this.customer_service.signin(body);
+    signin(@Body() body: SignIn, @Res({ passthrough: true }) res: Response) {
+        return this.customer_service.signin(body, res);
+    }
+
+    @Post("upload")
+    @UseGuards(AuthGuard("customer"))
+    upload() {
+        return "hello";
     }
 }
