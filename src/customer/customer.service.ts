@@ -48,7 +48,7 @@ export class CustomerService {
             const user = await this.db.customer.findUnique({ where: { email } });
             if (await verify(user.password, password)) {
                 const token = await this.create_token({ email });
-                res.cookie("Authorization", token, {
+                res.cookie("auth", token, {
                     maxAge: 60 * 60 * 12 * 1000,
                     sameSite: 'strict',
                     httpOnly: true

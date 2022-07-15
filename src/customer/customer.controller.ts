@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Response } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Request, Response } from 'express';
 import { CustomerService } from './customer.service';
 import { SignIn, SignUp } from './dto';
 
@@ -18,7 +19,9 @@ export class CustomerController {
 
     @Post("upload")
     @UseGuards(AuthGuard("customer"))
-    upload() {
+    // @UseInterceptors(FileInterceptor("file" , { dest: 'uploads/' }))
+    upload(@Req() req: Request) {
+        console.log(req.user);
         return "hello";
     }
 }

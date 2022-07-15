@@ -65,7 +65,7 @@ export class StaffService {
             const user = await this.db.staff.findUnique({ where: { email } });
             if (await verify(user.password, password)) {
                 const token = await this.create_token({ email, role: user.role });
-                res.cookie("Authorization", token, {
+                res.cookie("auth", token, {
                     maxAge: 60 * 60 * 12 * 1000,
                     sameSite: 'strict',
                     httpOnly: true
